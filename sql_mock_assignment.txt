@@ -1,58 +1,54 @@
 select * from progress;
 SELECT * FROM users;
 
+What are the Top 25 schools (.edu domains)?
 SELECT email_domain,count(*) as students FROM users GROUP by 1 ORDER by COUNT(email_domain) DESC LIMIT 25;
 
+How many .edu learners are located in New York?
 SELECT count(*) FROM users WHERE city='New York';
 
+The mobile_app column contains either mobile-user or NULL. How many of these Codecademy learners are using the mobile app?
 SELECT count(*) FROM users WHERE mobile_app is NOT NULL;
 
+using strftime() function, query for the sign up counts for each hour.
 SELECT sign_up_at as sign_up,strftime('%H', sign_up_at) as timestamp,,COUNT(*) as learners FROM users GROUP BY 1 LIMIT 20;
 
-WITH join_table AS 
-(SELECT *
-FROM users 
-LEFT JOIN progress
-  ON users.user_id = progress.user_id)
-
-WITH join_table AS 
-(SELECT *
-FROM users 
-LEFT JOIN progress
-  ON users.user_id = progress.user_id)
-
-SELECT email_domain,
-COUNT(CASE WHEN learn_sql IN ('completed', 'started') THEN 1 END) AS sql, 
-COUNT(CASE WHEN learn_cpp IN ('completed', 'started') THEN 1 END) AS cpp, 
-COUNT(CASE WHEN learn_html IN ('completed', 'started') THEN 1 END) AS html,
-COUNT(CASE WHEN learn_javascript IN ('completed', 'started') THEN 1 END) AS javascript,
-COUNT(CASE WHEN learn_java IN ('completed', 'started') THEN 1 END) AS java, COUNT(email_domain) AS total
-FROM join_table
+Do different schools (.edu domains) prefer different courses?
+SELECT users.email_domain,
+COUNT(progress.learn_sql IN ('completed', 'started')) AS sql, 
+COUNT(progress.learn_cpp IN ('completed', 'started')) AS cpp, 
+COUNT(progress.learn_html IN ('completed', 'started')) AS html,
+COUNT(progress.learn_javascript IN ('completed', 'started')) AS javascript,
+COUNT(progress.learn_java IN ('completed', 'started')) AS java,
+COUNT(email_domain) AS total
+FROM users
+JOIN progress
+ON users.user_id = progress.user_id
 GROUP by 1
 ORDER by 3 DESC;
 
-SELECT city,
-COUNT(CASE WHEN learn_sql IN ('completed', 'started') THEN 1 END) AS sql, 
-COUNT(CASE WHEN learn_cpp IN ('completed', 'started') THEN 1 END) AS cpp, 
-COUNT(CASE WHEN learn_html IN ('completed', 'started') THEN 1 END) AS html,
-COUNT(CASE WHEN learn_javascript IN ('completed', 'started') THEN 1 END) AS javascript,
-COUNT(CASE WHEN learn_java IN ('completed', 'started') THEN 1 END) AS java, COUNT(city) AS total
-FROM join_table
+What courses are the New Yorkers students taking?
+SELECT users.city,
+COUNT(progress.learn_sql IN ('completed', 'started')) AS sql, 
+COUNT(progress.learn_cpp IN ('completed', 'started')) AS cpp, 
+COUNT(progress.learn_html IN ('completed', 'started')) AS html,
+COUNT(progress.learn_javascript IN ('completed', 'started')) AS javascript,
+COUNT(progress.learn_java IN ('completed', 'started')) AS java, COUNT(city) AS total
+FROM users
+JOIN progress 
+ON users.user_id = progress.user_id
 WHERE city='New York'
-GROUP by city;
+GROUP by 1;
 
 WITH join_table AS 
-(SELECT *
-FROM users 
-LEFT JOIN progress
-  ON users.user_id = progress.user_id)
-
-SELECT city,
-COUNT(CASE WHEN learn_sql IN ('completed', 'started') THEN 1 END) AS sql, 
-COUNT(CASE WHEN learn_cpp IN ('completed', 'started') THEN 1 END) AS cpp, 
-COUNT(CASE WHEN learn_html IN ('completed', 'started') THEN 1 END) AS html,
-COUNT(CASE WHEN learn_javascript IN ('completed', 'started') THEN 1 END) AS javascript,
-COUNT(CASE WHEN learn_java IN ('completed', 'started') THEN 1 END) AS java, COUNT(city) AS total
-FROM join_table
-WHERE city='Chicago'
-GROUP by city
+SELECT users.city,
+COUNT(progress.learn_sql IN ('completed', 'started')) AS sql, 
+COUNT(progress.learn_cpp IN ('completed', 'started')) AS cpp, 
+COUNT(progress.learn_html IN ('completed', 'started')) AS html,
+COUNT(progress.learn_javascript IN ('completed', 'started')) AS javascript,
+COUNT(progress.learn_java IN ('completed', 'started')) AS java, COUNT(city) AS total
+FROM users
+JOIN progress 
+ON users.user_id = progress.user_id
+WHERE city='New York'
+GROUP by 1;
