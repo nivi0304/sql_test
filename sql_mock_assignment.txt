@@ -1,0 +1,58 @@
+select * from progress;
+SELECT * FROM users;
+
+SELECT email_domain,count(*) as students FROM users GROUP by 1 ORDER by COUNT(email_domain) DESC LIMIT 25;
+
+SELECT count(*) FROM users WHERE city='New York';
+
+SELECT count(*) FROM users WHERE mobile_app is NOT NULL;
+
+SELECT sign_up_at as sign_up,strftime('%H', sign_up_at) as timestamp,,COUNT(*) as learners FROM users GROUP BY 1 LIMIT 20;
+
+WITH join_table AS 
+(SELECT *
+FROM users 
+LEFT JOIN progress
+  ON users.user_id = progress.user_id)
+
+WITH join_table AS 
+(SELECT *
+FROM users 
+LEFT JOIN progress
+  ON users.user_id = progress.user_id)
+
+SELECT email_domain,
+COUNT(CASE WHEN learn_sql IN ('completed', 'started') THEN 1 END) AS sql, 
+COUNT(CASE WHEN learn_cpp IN ('completed', 'started') THEN 1 END) AS cpp, 
+COUNT(CASE WHEN learn_html IN ('completed', 'started') THEN 1 END) AS html,
+COUNT(CASE WHEN learn_javascript IN ('completed', 'started') THEN 1 END) AS javascript,
+COUNT(CASE WHEN learn_java IN ('completed', 'started') THEN 1 END) AS java, COUNT(email_domain) AS total
+FROM join_table
+GROUP by 1
+ORDER by 3 DESC;
+
+SELECT city,
+COUNT(CASE WHEN learn_sql IN ('completed', 'started') THEN 1 END) AS sql, 
+COUNT(CASE WHEN learn_cpp IN ('completed', 'started') THEN 1 END) AS cpp, 
+COUNT(CASE WHEN learn_html IN ('completed', 'started') THEN 1 END) AS html,
+COUNT(CASE WHEN learn_javascript IN ('completed', 'started') THEN 1 END) AS javascript,
+COUNT(CASE WHEN learn_java IN ('completed', 'started') THEN 1 END) AS java, COUNT(city) AS total
+FROM join_table
+WHERE city='New York'
+GROUP by city;
+
+WITH join_table AS 
+(SELECT *
+FROM users 
+LEFT JOIN progress
+  ON users.user_id = progress.user_id)
+
+SELECT city,
+COUNT(CASE WHEN learn_sql IN ('completed', 'started') THEN 1 END) AS sql, 
+COUNT(CASE WHEN learn_cpp IN ('completed', 'started') THEN 1 END) AS cpp, 
+COUNT(CASE WHEN learn_html IN ('completed', 'started') THEN 1 END) AS html,
+COUNT(CASE WHEN learn_javascript IN ('completed', 'started') THEN 1 END) AS javascript,
+COUNT(CASE WHEN learn_java IN ('completed', 'started') THEN 1 END) AS java, COUNT(city) AS total
+FROM join_table
+WHERE city='Chicago'
+GROUP by city
